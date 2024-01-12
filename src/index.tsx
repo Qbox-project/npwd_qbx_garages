@@ -6,9 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import App from './App';
 import image from './bg.png';
-import { NuiProvider } from 'react-fivem-hooks';
+import { NuiProvider } from 'fivem-nui-react-lib';
 import { RecoilRoot } from 'recoil';
-import { IPhoneSettings } from '@project-error/npwd-types';
+import { IPhoneSettings } from '@npwd/types';
 import i18next from 'i18next';
 import { createTheme } from '@mui/material';
 
@@ -65,7 +65,6 @@ const theme = createTheme({
  */
 
 const Root = () => {
-
 	if (process.env.NODE_ENV === 'production' || process.env.REACT_APP_IN_GAME) {
         return null;
     }
@@ -73,7 +72,7 @@ const Root = () => {
 	return (
 		<BrowserRouter>
 			<RecoilRoot>
-				<NuiProvider>
+				<NuiProvider resource="npwd_qbx_garages">
 					<Container>
 						<Background src={image}/>
 						<AppContainer>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { NuiProvider } from 'react-fivem-hooks';
-import { useHistory } from 'react-router-dom';
+import { NuiProvider } from 'fivem-nui-react-lib';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from './styles/header.styles';
-import { IPhoneSettings } from '@project-error/npwd-types';
+import { IPhoneSettings } from '@npwd/types';
 import { i18n } from 'i18next';
 import { IconButton, Theme, StyledEngineProvider, ThemeProvider, Typography } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
@@ -13,6 +13,9 @@ import { buildRespObj } from './utils/misc';
 import { VehicleList } from './components/VehicleList';
 import fetchNui from './utils/fetchNui';
 import { ServerPromiseResp } from './types/common';
+import { RecoilEnv, RecoilRoot } from 'recoil';
+
+RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
 const Container = styled.div<{ isDarkMode: any }>`
   flex: 1;
@@ -29,6 +32,7 @@ const Container = styled.div<{ isDarkMode: any }>`
     background-color: rgb(23 23 23 / 1);
   `}
 `;
+
 interface AppProps {
   theme: Theme;
   i18n: i18n;
@@ -36,7 +40,7 @@ interface AppProps {
 }
 
 const App = (props: AppProps) => {
-  const history = useHistory();
+  const navigation = useNavigate();
   const [vehicles, setVehicles] = useState<GarageItem[] | undefined>([]);
   const [mappedVeh, setMappedVeh] = useState<any>(null);
 
@@ -51,7 +55,6 @@ const App = (props: AppProps) => {
         setVehicles(resp.data);
     });
   }, []);
-
 
   useEffect(() => {
     if (vehicles) {
@@ -70,7 +73,7 @@ const App = (props: AppProps) => {
       <ThemeProvider theme={props.theme}>
         <Container isDarkMode={isDarkMode}>
           <Header>
-            <IconButton color="default" onClick={() => history.goBack()}>
+            <IconButton color="default" onClick={() => navigation(-1)}>
               <ArrowBack />
             </IconButton>
             <Typography fontSize={24} color={isDarkMode ? "white" : "black"} fontWeight="bold">
@@ -85,9 +88,11 @@ const App = (props: AppProps) => {
 };
 
 const WithProviders: React.FC<AppProps> = (props) => (
-  <NuiProvider>
-    <App {...props} />
-  </NuiProvider>
+  <RecoilRoot override key="npwd_qbx_garages">
+    <NuiProvider resource="npwd_qbx_garages">
+      <App {...props} />
+    </NuiProvider>
+  </RecoilRoot>
 );
 
 export default WithProviders;

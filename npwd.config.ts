@@ -1,6 +1,5 @@
 import App from './src/App';
 import { GarageIcon, NotificationIcon } from './icon';
-import { theme } from './src/app.theme';
 
 export const path = '/garage';
 export default () => ({
@@ -11,6 +10,5 @@ export default () => ({
   path,
   icon: GarageIcon,
   app: App,
-  notificationIcon: NotificationIcon,
-  theme: theme,
+  notificationIcon: NotificationIcon
 });

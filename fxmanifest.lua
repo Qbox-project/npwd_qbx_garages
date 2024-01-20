@@ -5,7 +5,7 @@ client_script 'client/client.lua'
 
 shared_scripts {
     '@ox_lib/init.lua',
-    '@qbx_core/modules/utils.lua'
+    '@qbx_core/modules/lib.lua'
 }
 
 server_scripts {

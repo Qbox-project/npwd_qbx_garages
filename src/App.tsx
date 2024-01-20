@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { NuiProvider } from 'fivem-nui-react-lib';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Header } from './styles/header.styles';
 import { IPhoneSettings } from '@npwd/types';
 import { i18n } from 'i18next';
-import { IconButton, Theme, StyledEngineProvider, ThemeProvider, Typography } from '@mui/material';
+import { IconButton, Theme, StyledEngineProvider, Typography } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import ThemeSwitchProvider from './ThemeSwitchProvider';
 import { GarageItem } from './types/garage';
 import { MockGarage } from './utils/constants';
 import { buildRespObj } from './utils/misc';
@@ -17,7 +17,7 @@ import { RecoilEnv, RecoilRoot } from 'recoil';
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
-const Container = styled.div<{ isDarkMode: any }>`
+const Container = styled.div<{ isDarkMode: boolean }>`
   flex: 1;
   padding: 1.5rem;
   display: flex;
@@ -25,12 +25,12 @@ const Container = styled.div<{ isDarkMode: any }>`
   flex-direction: column;
   overflow: auto;
   max-height: 100%;
-  background-color: #fafafa;
+background-color: #fafafa;
   ${({ isDarkMode }) =>
     isDarkMode &&
     `
-    background-color: rgb(23 23 23 / 1);
-  `}
+  background-color: rgb(23 23 23 / 1);
+`}
 `;
 
 interface AppProps {
@@ -70,7 +70,7 @@ const App = (props: AppProps) => {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={props.theme}>
+      <ThemeSwitchProvider mode={props.theme.palette.mode}>
         <Container isDarkMode={isDarkMode}>
           <Header>
             <IconButton color="default" onClick={() => navigation(-1)}>
@@ -82,16 +82,14 @@ const App = (props: AppProps) => {
           </Header>
           {mappedVeh && <VehicleList isDarkMode={isDarkMode} vehicles={mappedVeh} />}
         </Container>
-      </ThemeProvider>
+      </ThemeSwitchProvider>
     </StyledEngineProvider>
   );
 };
 
 const WithProviders: React.FC<AppProps> = (props) => (
   <RecoilRoot override key="npwd_qbx_garages">
-    <NuiProvider resource="npwd_qbx_garages">
-      <App {...props} />
-    </NuiProvider>
+    <App {...props} />
   </RecoilRoot>
 );
 

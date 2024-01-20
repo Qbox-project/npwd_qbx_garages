@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import '../npwd.config';
 
 import { BrowserRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import App from './App';
 import image from './bg.png';
-import { NuiProvider } from 'fivem-nui-react-lib';
 import { RecoilRoot } from 'recoil';
 import { IPhoneSettings } from '@npwd/types';
 import i18next from 'i18next';
 import { createTheme } from '@mui/material';
+import { lightTheme } from './app.theme';
 
 const Container = styled.div`
   position: relative;
@@ -53,12 +53,6 @@ const settings = {
 	},
 } as IPhoneSettings;
 
-const theme = createTheme({
-	palette: {
-		mode: 'light',
-	},
-});
-
 /*
  *   Providers loaded here will only be applied to the development environment.
  *   If you want to add more providers to the actual app inside NPWD you have to add them in APP.tsx.
@@ -66,20 +60,18 @@ const theme = createTheme({
 
 const Root = () => {
 	if (process.env.NODE_ENV === 'production' || process.env.REACT_APP_IN_GAME) {
-        return null;
-    }
+    return null;
+  }
 
 	return (
 		<BrowserRouter>
 			<RecoilRoot>
-				<NuiProvider resource="npwd_qbx_garages">
-					<Container>
-						<Background src={image}/>
-						<AppContainer>
-							<App settings={settings} i18n={i18next} theme={theme}/>
-						</AppContainer>
-					</Container>
-				</NuiProvider>
+				<Container>
+					<Background src={image}/>
+					<AppContainer>
+						<App settings={settings} i18n={i18next} theme={createTheme(lightTheme)}/>
+					</AppContainer>
+				</Container>
 			</RecoilRoot>
 		</BrowserRouter>
 	)

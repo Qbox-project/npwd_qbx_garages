@@ -41,8 +41,8 @@ interface AppProps {
 
 const App = (props: AppProps) => {
   const history = useHistory();
-  const [vehicles, setVehicles] = useState<GarageItem[] | undefined>([]);
-  const [mappedVeh, setMappedVeh] = useState<any>(null);
+  const [vehicles, setVehicles] = useState<GarageItem[]>([]);
+  const [mappedVeh, setMappedVeh] = useState<Map<string, GarageItem[]>>(new Map<string, GarageItem[]>());
 
   const isDarkMode = props.theme.palette.mode === 'dark';
 
@@ -52,20 +52,19 @@ const App = (props: AppProps) => {
       null,
       buildRespObj(MockGarage)
       ).then((resp) => {
+        if (!resp.data) return;
         setVehicles(resp.data);
     });
-  }, []);
+  });
 
   useEffect(() => {
-    if (vehicles) {
-      const mappedVehicles = vehicles?.reduce((vehs: any, vehicle: any) => {
-        if (!vehs[vehicle.type]) vehs[vehicle.type] = [];
-        vehs[vehicle.type].push(vehicle);
-        return vehs;
-      }, {});
+    const mappedVehicles = new Map<string, GarageItem[]>()
+    vehicles.forEach((vehicle: GarageItem) => {
+      if (!mappedVehicles.get(vehicle.type)) mappedVehicles.set(vehicle.type, []);
+      mappedVehicles.get(vehicle.type)?.push(vehicle);
+    }, {});
 
-      setMappedVeh(mappedVehicles);
-    }
+    setMappedVeh(mappedVehicles);
   }, [vehicles]);
 
   return (
@@ -80,7 +79,7 @@ const App = (props: AppProps) => {
               Garage
             </Typography>
           </Header>
-          {mappedVeh && <VehicleList isDarkMode={isDarkMode} vehicles={mappedVeh} />}
+          {mappedVeh.size > 0 ? <VehicleList isDarkMode={isDarkMode} vehicles={mappedVeh} /> : <Typography align="center" fontSize={20} color={isDarkMode ? "white" : "black"}>No vehicles to display</Typography>}
         </Container>
       </ThemeSwitchProvider>
     </StyledEngineProvider>

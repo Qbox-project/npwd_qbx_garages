@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Header } from './styles/header.styles';
 import { IPhoneSettings } from '@npwd/types';
@@ -25,7 +25,7 @@ const Container = styled.div<{ isDarkMode: boolean }>`
   flex-direction: column;
   overflow: auto;
   max-height: 100%;
-background-color: #fafafa;
+  background-color: #fafafa;
   ${({ isDarkMode }) =>
     isDarkMode &&
     `
@@ -40,7 +40,7 @@ interface AppProps {
 }
 
 const App = (props: AppProps) => {
-  const navigation = useNavigate();
+  const history = useHistory();
   const [vehicles, setVehicles] = useState<GarageItem[] | undefined>([]);
   const [mappedVeh, setMappedVeh] = useState<any>(null);
 
@@ -73,7 +73,7 @@ const App = (props: AppProps) => {
       <ThemeSwitchProvider mode={props.theme.palette.mode}>
         <Container isDarkMode={isDarkMode}>
           <Header>
-            <IconButton color="default" onClick={() => navigation(-1)}>
+            <IconButton color="default" onClick={() => history.goBack()}>
               <ArrowBack />
             </IconButton>
             <Typography fontSize={24} color={isDarkMode ? "white" : "black"} fontWeight="bold">

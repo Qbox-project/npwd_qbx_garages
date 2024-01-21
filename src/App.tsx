@@ -41,7 +41,6 @@ interface AppProps {
 
 const App = (props: AppProps) => {
   const history = useHistory();
-  const [vehicles, setVehicles] = useState<GarageItem[]>([]);
   const [mappedVeh, setMappedVeh] = useState<Map<string, GarageItem[]>>(new Map<string, GarageItem[]>());
 
   const isDarkMode = props.theme.palette.mode === 'dark';
@@ -53,19 +52,15 @@ const App = (props: AppProps) => {
       buildRespObj(MockGarage)
       ).then((resp) => {
         if (!resp.data) return;
-        setVehicles(resp.data);
+        const mappedVehicles = new Map<string, GarageItem[]>()
+        resp.data.forEach((vehicle: GarageItem) => {
+          if (!mappedVehicles.get(vehicle.type)) mappedVehicles.set(vehicle.type, []);
+          mappedVehicles.get(vehicle.type)?.push(vehicle);
+        });
+
+        setMappedVeh(mappedVehicles);
     });
   });
-
-  useEffect(() => {
-    const mappedVehicles = new Map<string, GarageItem[]>()
-    vehicles.forEach((vehicle: GarageItem) => {
-      if (!mappedVehicles.get(vehicle.type)) mappedVehicles.set(vehicle.type, []);
-      mappedVehicles.get(vehicle.type)?.push(vehicle);
-    }, {});
-
-    setMappedVeh(mappedVehicles);
-  }, [vehicles]);
 
   return (
     <StyledEngineProvider injectFirst>

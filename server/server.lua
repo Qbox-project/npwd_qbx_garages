@@ -32,7 +32,7 @@ lib.callback.register('npwd_qbx_garages:server:getPlayerVehicles', function(sour
 			vehicleData.brand = VEHICLES[model].brand
 		end
 
-		vehicleData.garage = garageConfig.garages[vehicleData.garage]?.label or locale('states.garage_unknown')
+		vehicleData.garage = garageConfig[vehicleData.garage]?.label or locale('states.garage_unknown')
 	end
 
 	return result
